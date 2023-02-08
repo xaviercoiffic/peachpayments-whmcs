@@ -9,11 +9,11 @@ $gatewayParams = getGatewayVariables($gatewayModuleName);
 
 if($gatewayParams['testMode']=='on')
 {
-    $url='https://test.oppwa.com/';
+    $url='https://eu-test.oppwa.com/';
 }
 else
 {
-    $url='https://oppwa.com/';
+    $url='https://eu-prod.oppwa.com/';
 }
 
 $curl = curl_init();
