@@ -88,6 +88,11 @@ function peachpayments_capture($params)
     
     $callback_url= $systemUrl . '/modules/gateways/callback/' . $moduleName . '.php';
 
+    // Get timezone offset
+    $defaultTimezone = date_default_timezone_get();
+    $defaultDateTimezone = new DateTimeZone($defaultTimezone);
+    $now = new \DateTime("now", $defaultDateTimezone);
+    $timezoneOffset = $defaultDateTimezone->getOffset($now);
 
     $data = array(
         "entityId" => $entity_id,
@@ -104,7 +109,19 @@ function peachpayments_capture($params)
         "customParameters[invoiceId]" => $invoiceId,
         "customParameters[currency]" => $currencyCode,
         "customParameters[amount]" => $amount,
-        "customParameters[systemUrl]" => $systemUrl);
+        "customParameters[systemUrl]" => $systemUrl,
+        "customer.ip" => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ""),
+        "customer.browser.acceptHeader" => "text/html",
+        "customer.browser.screenColorDepth" => 48,
+        "customer.browser.javaEnabled" => false,
+        "customer.browser.javascriptEnabled" => true,
+        "customer.browser.language" => "en",
+        "customer.browser.screenHeight" => 1200,
+        "customer.browser.screenWidth" => 1600,
+        "customer.browser.timezone" => $timezoneOffset,
+        "customer.browser.challengeWindow" => 4,
+        "customer.browser.userAgent" => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "")
+    );
 
     if($testMode=='on')
     {
